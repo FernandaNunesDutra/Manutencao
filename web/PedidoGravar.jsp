@@ -14,7 +14,7 @@
     <body>
         <h1>Cadastrar</h1>
         
-        <form action="FrontController?action=GravarPedido" method="post">
+        <form action="FrontController?action=PedidoGravar" method="post">
             Cliente:
             <input type="text" name="textCliente"/><br/>
             Aparelho:

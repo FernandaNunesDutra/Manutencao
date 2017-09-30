@@ -17,7 +17,7 @@
     
     <h2>Pedidos</h2>
     
-    <a href="PedidoCadastrar.jsp">Cadastrar</a>
+    <a href="PedidoGravar.jsp">Cadastrar</a>
     <a href="PedidoBuscar.jsp">Buscar</a> 
 
     </body>
