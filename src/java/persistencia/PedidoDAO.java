@@ -27,13 +27,13 @@ public class PedidoDAO {
     }
     
     public void save(Pedido pedido) throws ClassNotFoundException, SQLException{
-        Connection conn = null;
+       Connection conn = null;
         Statement st = null;
         
         try {
             conn = DatabaseLocator.getInstance().getConnection();
             st = conn.createStatement();
-            st.execute("insert into pedido (cliente, aparelho) values ('" + pedido.getCliente() + "', '" + pedido.getAparelho()+"')");
+            st.execute("insert into pedidos (cliente, aparelho) values ('" + pedido.getCliente() + "', '" + pedido.getAparelho()+"')");
         } catch(SQLException e) {
             throw e;
         } finally {
