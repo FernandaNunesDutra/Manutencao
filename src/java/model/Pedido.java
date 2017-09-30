@@ -31,7 +31,12 @@ public class Pedido {
         this.cliente = cliente;
         this.aparelho = aparelho;
         this.dataRecebido = dataRecebido;
-        this.status = status;
+    }
+    
+    public Pedido(int codigo, String cliente, String aparelho) {
+        this.codigo = codigo;
+        this.cliente = cliente;
+        this.aparelho = aparelho;
     }
 
     public int getCodigo() {

@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Pedido;
+import persistencia.PedidoDAO;
 
 /**
  *
@@ -45,16 +46,16 @@ public class PedidoAlterarAction  implements Action{
         }
         else{
             try{
-                Pedido pedido = new Pedido(codigo, nome, aparelho);
-                ClienteDAO.getInstance().alter(cliente);
+                Pedido pedido = new Pedido(Integer.parseInt(codigo), nome, aparelho);
+                PedidoDAO.getInstance().alter(pedido);
             
-                response.sendRedirect("TelaSucesso.jsp");
+                response.sendRedirect("PedidosAlterar.jsp");
             
             } catch(SQLException e){
-                response.sendRedirect("TelaErro.jsp");
+                response.sendRedirect("PedidosAlterar.jsp");
                 e.printStackTrace();
             } catch (ClassNotFoundException ex) {
-                  Logger.getLogger(GravarClienteAction.class.getName()).log(Level.SEVERE, null, ex);
+                  Logger.getLogger(PedidoGravarAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
