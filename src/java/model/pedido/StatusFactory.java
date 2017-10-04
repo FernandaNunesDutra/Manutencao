@@ -9,7 +9,7 @@ public final class StatusFactory {
     public static final int SEM_CONSERTO = 5;
     public static final int CANCELADO = 6;
     public static final int AGUARDANDO_PECA = 7;
-
+    
     public static StatusPedido getStatusPedido(int statusId){
         StatusPedido statusPedido;
         switch(statusId){

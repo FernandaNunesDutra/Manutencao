@@ -26,9 +26,11 @@ class DatabaseLocator {
         return instance;
     }
     
-    Connection getConnection() throws ClassNotFoundException, SQLException{
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection("jdbc:mysql://localhost/mydb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT-3&allowMultiQueries=true", "root", "root");
+        public Connection getConnection() throws ClassNotFoundException, SQLException{
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn =
+                (Connection) DriverManager.getConnection("jdbc:mysql://localhost/mysql", "root", "root");
+            return conn;
     }
 }
 

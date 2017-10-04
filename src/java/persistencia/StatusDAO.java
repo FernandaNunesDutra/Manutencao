@@ -21,8 +21,7 @@ import java.util.List;
 public class StatusDAO {
     private static StatusDAO instance;
 
-    private StatusDAO() {
-    }
+    private StatusDAO() {}
 
     public static StatusDAO getInstance() {
         if (instance == null)

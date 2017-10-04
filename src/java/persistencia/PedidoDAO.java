@@ -44,7 +44,9 @@ public class PedidoDAO {
                     + "', " + tipoCliente + ");";
             String queryPedido = "INSERT INTO pedido (cliente, aparelho, dataRecebido, status, tipoPagamento) VALUES (LAST_INSERT_ID(), '" +
                     pedido.getAparelho() + "', '" + dataStr + "', " + StatusFactory.RECEBIDO + ", " + tipoPagamento + ");";
-            st.execute(queryCliente + queryPedido);
+            st.execute(queryCliente);
+            st.execute(queryPedido);
+            
         } finally {
             closeResources(conn, st);
         }
@@ -56,7 +58,7 @@ public class PedidoDAO {
         Statement st = null;
 
         try {
-            String query = "SELECT pedido.*,cliente.* FROM pedido INNER JOIN cliente ON pedido.cliente = cliente.id" +
+            String query = "SELECT pedido.*, cliente.* FROM pedido INNER JOIN cliente ON pedido.cliente = cliente.id" +
                     " WHERE pedido.id = " + codigo;
 
             conn = DatabaseLocator.getInstance().getConnection();

@@ -11,7 +11,7 @@ import model.InvalidStateChangeException;
  * @author fernanda
  */
 public class StatusAvaliar implements StatusPedido {
-
+    
     @Override
     public void receber(Pedido pedido) throws InvalidStateChangeException {
         throw new InvalidStateChangeException("Mudança de status de \'Em avaliação\' para \'Recebido\' é inválida!");
@@ -51,4 +51,10 @@ public class StatusAvaliar implements StatusPedido {
     public String retornarStatus() {
         return "Em avaliação";
     }
+
+     @Override
+    public int retornaId() {
+        return StatusFactory.EM_AVALIACAO;
+    }
+    
 }

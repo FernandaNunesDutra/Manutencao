@@ -12,6 +12,7 @@ import model.InvalidStateChangeException;
  */
 public class StatusAguardandoPeca implements StatusPedido {
 
+    
     @Override
     public void receber(Pedido pedido) throws InvalidStateChangeException {
         throw new InvalidStateChangeException("Mudança de status de \'Aguardando peça\' para \'Recebido\' é inválida!");
@@ -51,4 +52,10 @@ public class StatusAguardandoPeca implements StatusPedido {
     public String retornarStatus() {
         return "Aguardando peça";
     }
+
+     @Override
+    public int retornaId() {
+        return StatusFactory.AGUARDANDO_PECA;
+    }
+    
 }

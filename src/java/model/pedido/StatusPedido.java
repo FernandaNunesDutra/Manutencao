@@ -11,7 +11,7 @@ import model.InvalidStateChangeException;
  * @author fernanda
  */
 public interface StatusPedido {
-
+    
     void receber(Pedido pedido) throws InvalidStateChangeException;
 
     void avaliar(Pedido pedido) throws InvalidStateChangeException;
@@ -27,4 +27,6 @@ public interface StatusPedido {
     void informarConserto(Pedido pedido) throws InvalidStateChangeException;
 
     String retornarStatus();
+        
+    int retornaId();
 }

@@ -11,7 +11,7 @@ import model.InvalidStateChangeException;
  * @author fernanda
  */
 public class StatusCancelado implements StatusPedido {
-
+    
     @Override
     public void receber(Pedido pedido) throws InvalidStateChangeException {
         throw new InvalidStateChangeException("Mudança de status de \'Cancelado\' para \'Recebido\' é inválida!");
@@ -51,4 +51,10 @@ public class StatusCancelado implements StatusPedido {
     public String retornarStatus() {
         return "Cancelado";
     }
+
+    @Override
+    public int retornaId() {
+        return StatusFactory.CANCELADO;
+    }
+  
 }

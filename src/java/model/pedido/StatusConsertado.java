@@ -11,7 +11,7 @@ import model.InvalidStateChangeException;
  * @author fernanda
  */
 public class StatusConsertado implements StatusPedido {
-
+    
     @Override
     public void receber(Pedido pedido) throws InvalidStateChangeException {
         throw new InvalidStateChangeException("Mudança de status de \'Consertado\' para \'Recebido\' é inválida!");
@@ -51,4 +51,10 @@ public class StatusConsertado implements StatusPedido {
     public String retornarStatus() {
         return "Consertado";
     }
+
+     @Override
+    public int retornaId() {
+        return StatusFactory.CONSERTADO;
+    }
+
 }

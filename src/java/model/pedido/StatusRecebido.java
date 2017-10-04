@@ -11,11 +11,10 @@ import model.InvalidStateChangeException;
  * @author fernanda
  */
 public class StatusRecebido implements StatusPedido {
-
+    
+    
     @Override
-    public void receber(Pedido pedido) throws InvalidStateChangeException {
-
-    }
+    public void receber(Pedido pedido) throws InvalidStateChangeException {}
 
     @Override
     public void avaliar(Pedido pedido) throws InvalidStateChangeException {
@@ -51,4 +50,11 @@ public class StatusRecebido implements StatusPedido {
     public String retornarStatus() {
         return "Recebido";
     }
+
+    @Override
+    public int retornaId() {
+        return StatusFactory.RECEBIDO;
+    }
+    
+  
 }

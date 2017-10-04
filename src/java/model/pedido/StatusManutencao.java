@@ -12,6 +12,7 @@ import model.InvalidStateChangeException;
  */
 public class StatusManutencao implements StatusPedido {
 
+    
     @Override
     public void receber(Pedido pedido) throws InvalidStateChangeException {
         throw new InvalidStateChangeException("Mudança de status de \'Em manutenção\' para \'Recebido\' é inválida!");
@@ -51,4 +52,10 @@ public class StatusManutencao implements StatusPedido {
     public String retornarStatus() {
         return "Em manutenção";
     }
+
+    @Override
+    public int retornaId() {
+        return StatusFactory.EM_MANUTENCAO;
+    }
+    
 }
