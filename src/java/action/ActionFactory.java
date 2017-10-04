@@ -14,10 +14,10 @@ import controller.Action;
 public class ActionFactory {
 
     public static Action create(String action) {
-        Action actionObject = null;
+        Action actionObject;
         String nomeClasse = "action." + action + "Action";
-        Class classe =  null;
-        Object objeto = null;
+        Class classe;
+        Object objeto;
         
         try{
             classe = Class.forName(nomeClasse);
