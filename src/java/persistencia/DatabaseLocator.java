@@ -13,24 +13,22 @@ import java.sql.SQLException;
  *
  * @author 07228620674
  */
-public class DatabaseLocator {
-    public static DatabaseLocator instance = null;
+class DatabaseLocator {
+    private static DatabaseLocator instance = null;
     
     private DatabaseLocator(){
         
     }
     
-    public static DatabaseLocator getInstance() throws ClassNotFoundException, SQLException{
+    static DatabaseLocator getInstance() throws ClassNotFoundException, SQLException{
         if(instance == null)
             instance = new DatabaseLocator();
         return instance;
     }
     
-    public Connection getConnection() throws ClassNotFoundException, SQLException{
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection conn =
-                (Connection) DriverManager.getConnection("jdbc:mysql://localhost/mysql", "root", "root");
-        return conn;
+    Connection getConnection() throws ClassNotFoundException, SQLException{
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection("jdbc:mysql://localhost/mydb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT-3&allowMultiQueries=true", "root", "root");
     }
 }
 
