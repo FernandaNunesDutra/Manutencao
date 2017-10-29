@@ -7,7 +7,6 @@ package action;
 
 import controller.Action;
 import model.cliente.Cliente;
-import model.cliente.ClienteFactory;
 import model.pedido.MetodoPagamento;
 import model.pedido.MetodoPagamentoFactory;
 import model.pedido.Pedido;
@@ -19,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import persistencia.ClienteDAO;
 
 /**
  * @author fernanda
@@ -27,19 +27,19 @@ public class PedidoCadastrarAction implements Action {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String nomeCliente = request.getParameter("nomeCliente");
+        String clienteId = request.getParameter("clienteId");
         String aparelho = request.getParameter("textAparelho");
-        int tipoCliente = Integer.parseInt(request.getParameter("tipoCliente"));
         int tipoPagamento = Integer.parseInt(request.getParameter("tipoPagamento"));
-
-        if (nomeCliente.equals("") || aparelho.equals("")) {
+        
+        if (clienteId.equals("") || aparelho.equals("")) {
             response.sendRedirect("PedidoCadastrar.jsp");
         } else {
             try {
-                Cliente cliente = ClienteFactory.createCliente(tipoCliente, nomeCliente);
+                Cliente cliente = ClienteDAO.getInstance().search(clienteId);                
                 MetodoPagamento metodoPagamento = MetodoPagamentoFactory.createMetodoPagamento(tipoPagamento);
                 Pedido pedido = new Pedido(cliente, aparelho, metodoPagamento);
-                PedidoDAO.getInstance().save(pedido, tipoCliente, tipoPagamento);
+                PedidoDAO.getInstance().save(pedido, clienteId, tipoPagamento);
+                
                 request.setAttribute("resultado", "Pedido cadastrado com sucesso!");
             } catch (SQLException | ClassNotFoundException ex) {
                 request.setAttribute("resultado", "Houve um erro no cadastro do pedido!");

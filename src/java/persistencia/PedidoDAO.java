@@ -32,7 +32,7 @@ public class PedidoDAO {
         return instance;
     }
 
-    public void save(Pedido pedido, int tipoCliente, int tipoPagamento) throws ClassNotFoundException, SQLException {
+    public void save(Pedido pedido, String clienteId, int tipoPagamento) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Statement st = null;
 
@@ -40,11 +40,11 @@ public class PedidoDAO {
             conn = DatabaseLocator.getInstance().getConnection();
             st = conn.createStatement();
             String dataStr = new SimpleDateFormat("yyyy-MM-dd").format(pedido.getDataRecebido());
-            String queryCliente = "INSERT INTO cliente(nome, tipo) VALUES('" + pedido.getCliente().getNome()
-                    + "', " + tipoCliente + ");";
-            String queryPedido = "INSERT INTO pedido (cliente, aparelho, dataRecebido, status, tipoPagamento) VALUES (LAST_INSERT_ID(), '" +
-                    pedido.getAparelho() + "', '" + dataStr + "', " + StatusFactory.RECEBIDO + ", " + tipoPagamento + ");";
-            st.execute(queryCliente);
+
+            String queryPedido = "INSERT INTO pedido (cliente, aparelho, dataRecebido, status, tipoPagamento) "
+                               + "VALUES ("+ clienteId +", '" + pedido.getAparelho() + "', '" + dataStr + "', " 
+                               + StatusFactory.RECEBIDO + ", " + tipoPagamento + ");";
+
             st.execute(queryPedido);
             
         } finally {
@@ -67,8 +67,11 @@ public class PedidoDAO {
             ResultSet rs = st.executeQuery(query);
             if (rs.next()) {
                 StatusPedido statusPedido = StatusFactory.getStatusPedido(rs.getInt("status"));
+                
                 Cliente cliente = ClienteFactory.getCliente(rs);
+                
                 MetodoPagamento metodoPagamento = MetodoPagamentoFactory.createMetodoPagamento(rs.getInt("tipoPagamento"));
+                
                 pedido = new Pedido(rs.getInt("id"), cliente, metodoPagamento, rs.getString("aparelho"),
                         rs.getDate("dataRecebido"), statusPedido);
             }
@@ -84,17 +87,11 @@ public class PedidoDAO {
         Statement st = null;
 
         try {
-            String statusQuery = "SELECT * FROM statusPedido WHERE nome = '" + pedido.getStatus() + "'";
-
             conn = DatabaseLocator.getInstance().getConnection();
             st = conn.createStatement();
-            st.executeQuery(statusQuery);
-            ResultSet rs = st.getResultSet();
-            rs.next();
-            int statusId = rs.getInt("id");
 
-            String updatePedidoQuery = "UPDATE pedido SET status =" + statusId + " WHERE id = " + pedido.getId();
-            st.execute(updatePedidoQuery);
+            String updatePedidoQuery = "UPDATE pedido SET status =" + pedido.getIdStatus() + " WHERE id = " + pedido.getId();
+            st.executeUpdate(updatePedidoQuery);
         } finally {
             closeResources(conn, st);
         }

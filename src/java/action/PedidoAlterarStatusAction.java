@@ -58,12 +58,17 @@ public class PedidoAlterarStatusAction implements Action {
                 default:
                     throw new IllegalArgumentException("Status id inválido: " + statusId);
             }
+            
             PedidoDAO.getInstance().alter(pedido);
+            
             List<String> mensagens = pedido.getCliente().getMensagens();
+            
             if(!mensagens.isEmpty()){
                 request.setAttribute("mensagens", mensagens);
             }
+            
             rd = request.getRequestDispatcher("PedidoMostrar.jsp");
+        
         } catch (SQLException | ClassNotFoundException ex) {
             request.setAttribute("resultado", "Houve um erro ao alterar o status do pedido!");
             rd = request.getRequestDispatcher("PedidoAlterarStatus.jsp?statusPedido="

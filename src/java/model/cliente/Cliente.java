@@ -23,13 +23,17 @@ public abstract class Cliente implements Observer {
     }
 
     public String mostrarInformacoes() {
-        return nome + "(" + getTipo() + ")";
+        return nome + " (" + getTipo() + ")";
     }
 
     public abstract String getTipo();
 
     public int getId() {
         return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {

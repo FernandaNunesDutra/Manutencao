@@ -17,7 +17,7 @@
     
     <h2>Pedidos</h2>
     
-    <a href="PedidoCadastrar.jsp">Cadastrar</a>
+    <a href="PedidoCadastrar.jsp">Cadastrar</a><br/>
     <a href="PedidoMostrar.jsp">Mostrar Pedidos</a>
 
     </body>

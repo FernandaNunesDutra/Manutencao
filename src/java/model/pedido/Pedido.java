@@ -19,6 +19,7 @@ public class Pedido extends Observable {
     private String aparelho;
     private Date dataRecebido;
     private StatusPedido status;
+    private Defeito defeito;
 
     public Pedido(Cliente cliente, String aparelho, MetodoPagamento metodoPagamento) {
         this.cliente = cliente;
@@ -60,6 +61,11 @@ public class Pedido extends Observable {
         return dataRecebido;
     }
 
+    
+    public int getIdStatus() {
+        return status.retornaId();
+    }
+    
     public String getStatus() {
         return status.retornarStatus();
     }
@@ -109,4 +115,13 @@ public class Pedido extends Observable {
         setChanged();
         notifyObservers();
     }
+
+    public Defeito getDefeito() {
+        return defeito;
+    }
+
+    public void setDefeito(Defeito defeito) {
+        this.defeito = defeito;
+    }
+  
 }

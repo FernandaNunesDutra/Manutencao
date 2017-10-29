@@ -12,26 +12,29 @@
 </head>
 
 <body>
-    <h1>Alterar status do pedido</h1>
+    <h1>Alterar Defeito do Pedido</h1>
 
-    <br>Status atual: ${param.statusPedido}
-
-    <form action="FrontController?action=PedidoAlterarStatus" method="post">
-        Mudar o status para:
-        <select id="comboStatus" name="statusId">
+    <form action="FrontController?action=PedidoCadastraDefeito" method="post">
+        Descrição:
+        <input type="text" name="descricaoDefeito">
+        
+        <br/>
+        
+        Tipo de Defeito:
+        <select id="comboStatus" name="TipoDefeito">
             <option value="">..</option>
-            
-            <c:forEach var="statusPedido" items="${bean.status}" varStatus="loop">
-                <option value="${statusPedido.retornaId()}">${statusPedido.retornarStatus()}</option>
-            </c:forEach>
+            <option value="S">Simples</option>
+            <option value="M">Médio</option>
+            <option value="D">Difícil</option>
         </select>
-       
+        
+        <br/>
+        
         <input type="hidden" name="pedidoId" value="${param.pedidoId}">
-        <input type="hidden" name="statusPedido" value="${param.statusPedido}">
         <input type="submit"/>
     </form>
     
-        <br>    
+    <br>    
         
     ${resultado}
 
