@@ -45,6 +45,13 @@ ${mensagens}
                         <input type="hidden" name="statusPedido" id="statusPedido" value="${pedido.status}"/>
                         <button type="submit">Alterar Status</button>
                     </form>
+                    <form  action="PedidoCadastrarDefeito.jsp" method="post">
+                        <input type="hidden" name="pedidoId" id="pedidoId" value="${pedido.id}"/>
+                        <input type="hidden" name="statusPedido" id="statusPedido" value="${pedido.status}"/>
+                        <c:if test = "${pedido.status.equals('Em avaliação')}">
+                            <button type="submit">Cadastrar Defeito</button>
+                        </c:if>
+                    </form>
                 </td>
             </tr>
         </c:forEach>
