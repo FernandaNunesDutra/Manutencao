@@ -15,17 +15,14 @@
     <h1>Alterar Defeito do Pedido</h1>
 
     <form action="FrontController?action=PedidoCadastraDefeito" method="post">
-        Descrição:
-        <input type="text" name="descricaoDefeito">
-        
-        <br/>
-        
+       
         Tipo de Defeito:
         <select id="comboStatus" name="TipoDefeito">
             <option value="">..</option>
             <option value="S">Simples</option>
             <option value="M">Médio</option>
             <option value="D">Difícil</option>
+            <option value="MD">Muito Difícil</option>
         </select>
         
         <br/>
@@ -37,6 +34,10 @@
     <br>    
         
     ${resultado}
+    
+    <br>
+        
+    <a href="PedidoMostrar.jsp">Mostrar Pedidos</a>
 
 </body>
 </html>

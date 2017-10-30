@@ -16,4 +16,8 @@ public class TipoDefeitoSimples  implements TipoDefeito{
         return "Simples";
     }
     
+    @Override
+    public String retornaCodigoTipoDefeito() {
+        return "S";
+    }
 }

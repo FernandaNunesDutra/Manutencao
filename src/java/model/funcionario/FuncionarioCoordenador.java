@@ -5,18 +5,19 @@
  */
 package model.funcionario;
 
+import model.pedido.RolDefeitos;
+
 /**
  *
  * @author fernanda
  */
 public class FuncionarioCoordenador extends Funcionario{
 
-    public FuncionarioCoordenador(Funcionario superior) {
-        setFuncionarioSuperior(superior);
-    }
-    
-    @Override
-    public String getDescricaoCargo() {
-        return "Coordenador";
+    public FuncionarioCoordenador(int id) {
+        this.id = id;
+        this.listaDefeitos.add(RolDefeitos.getInstance().getTipoDefeitoSimples());
+        this.listaDefeitos.add(RolDefeitos.getInstance().getTipoDefeitoMedio());
+        this.listaDefeitos.add(RolDefeitos.getInstance().getTipoDefeitoDificil());
+        this.listaDefeitos.add(RolDefeitos.getInstance().getTipoDefeitoMuitoDificil());
     }
 }

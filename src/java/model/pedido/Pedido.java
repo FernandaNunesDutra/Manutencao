@@ -14,6 +14,7 @@ import java.util.Observable;
 public class Pedido extends Observable {
 
     private int id;
+    private int idFuncionario;
     private Cliente cliente;
     private MetodoPagamento metodoPagamento;
     private String aparelho;
@@ -123,5 +124,12 @@ public class Pedido extends Observable {
     public void setDefeito(Defeito defeito) {
         this.defeito = defeito;
     }
-  
+
+    public int getIdFuncionario() {
+        return idFuncionario;
+    }
+    
+    public void setIdFuncionario(int id){
+        this.idFuncionario = id;
+    }
 }

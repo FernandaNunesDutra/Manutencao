@@ -16,4 +16,9 @@ public class TipoDefeitoMedio implements TipoDefeito{
         return "Médio";
     }
     
+    @Override
+    public String retornaCodigoTipoDefeito() {
+        return "M";
+    }
+    
 }

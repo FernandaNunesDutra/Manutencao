@@ -7,30 +7,22 @@ package model.funcionario;
 
 import java.util.ArrayList;
 import model.pedido.Defeito;
+import model.pedido.TipoDefeito;
 
 
 public abstract class Funcionario {
 
-    protected ArrayList listaDefeitos = new ArrayList();
-    private Funcionario funcionarioSuperior;
-
-    public abstract String getDescricaoCargo();
-
-    public Funcionario getFuncionarioSuperior() {
-        return funcionarioSuperior;
-    }
-
-    public void setFuncionarioSuperior(Funcionario funcionarioSuperior) {
-        this.funcionarioSuperior = funcionarioSuperior;
-    }
+    protected int id;
+    protected ArrayList<TipoDefeito> listaDefeitos = new ArrayList();
+    protected Funcionario funcionarioSuperior;
     
-    public String atribuirConserto(Defeito defeito) {
+    public int atribuirConserto(Defeito defeito) {
         if (listaDefeitos.contains(defeito.getTipoDefeito())) {
-            return getDescricaoCargo();
+            return id;
         } else if (funcionarioSuperior != null) {
             return funcionarioSuperior.atribuirConserto(defeito);
         } else {
-            return "Sem Conserto";
+            return 0;
         }
     }
 

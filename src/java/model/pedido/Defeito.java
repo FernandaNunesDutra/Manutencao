@@ -14,15 +14,10 @@ public class Defeito {
     private String descricao;
     private TipoDefeito tipoDefeito;
 
-    public Defeito(TipoDefeito tipoDefeito , String descricao) {
-        this.tipoDefeito = tipoDefeito;
-        this.descricao = descricao;
-    }
-    
     public Defeito(TipoDefeito tipoDefeito) {
         this.tipoDefeito = tipoDefeito;
     }
-
+    
     public TipoDefeito getTipoDefeito() {
         return tipoDefeito;
     }
@@ -38,5 +33,7 @@ public class Defeito {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+    
+    
     
 }

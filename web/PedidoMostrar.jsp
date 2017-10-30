@@ -23,6 +23,7 @@ table, th, td {
 <h1>Produtos Recebidos</h1>
 
 ${mensagens}
+${resultado}
 
     <table>
         <tr>
@@ -30,6 +31,7 @@ ${mensagens}
             <td><b>Cliente</b></td>
             <td><b>Método de Pagamento</b></td>
             <td><b>Aparelho</b></td>
+            <td><b>Tipo Defeito</b></td>
             <td colspan="2"><b>Status</b></td>
         </tr>
         <c:forEach var="pedido" items="${bean.pedidos}">
@@ -38,7 +40,9 @@ ${mensagens}
                 <td>${pedido.cliente.mostrarInformacoes()}</td>
                 <td>${pedido.metodoPagamento.imprimir()}</td>
                 <td>${pedido.aparelho}</td>
+                <td>${pedido.defeito.getTipoDefeito().retornaTipoDefeito()}</td>
                 <td>${pedido.status}</td>
+                
                 <td>
                     <form action="PedidoAlterarStatus.jsp" method="post">
                         <input type="hidden" name="pedidoId" id="pedidoId" value="${pedido.id}"/>
@@ -51,6 +55,12 @@ ${mensagens}
                         <c:if test = "${pedido.status.equals('Em avaliação')}">
                             <button type="submit">Cadastrar Defeito</button>
                         </c:if>
+                    </form>
+                    <form action="FrontController?action=PedidoAtribuirConserto" method="post">
+                        <input type="hidden" name="pedidoId" id="pedidoId" value="${pedido.id}"/>
+                        <c:if test = "${pedido.status.equals('Em manutenção')}">
+                            <button type="submit">Atribuir Conserto</button>
+                        </c:if>    
                     </form>
                 </td>
             </tr>

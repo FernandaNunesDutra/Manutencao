@@ -16,4 +16,8 @@ public class TipoDefeitoMuitoDificil implements TipoDefeito{
         return "Muito Difícil";
     }
     
+    @Override
+    public String retornaCodigoTipoDefeito() {
+        return "MD";
+    }
 }

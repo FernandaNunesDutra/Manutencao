@@ -12,4 +12,5 @@ package model.pedido;
 public interface TipoDefeito {
     
     public String retornaTipoDefeito();
+    public String retornaCodigoTipoDefeito();
 }
