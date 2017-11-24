@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import model.pedido.PedidoMemento;
 
 /**
  * @author fernanda
@@ -61,6 +63,10 @@ public class PedidoAlterarStatusAction implements Action {
             
             PedidoDAO.getInstance().alter(pedido);
             
+            //Memento
+           /* ArrayList<PedidoMemento> statusSalvos = pedido.getStatusSalvos();
+            statusSalvos.add(pedido.saveToMemento());*/
+             
             List<String> mensagens = pedido.getCliente().getMensagens();
             
             if(!mensagens.isEmpty()){

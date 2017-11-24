@@ -24,6 +24,10 @@ public class StatusAvaliar implements StatusPedido {
 
     @Override
     public void realizarManutencao(Pedido pedido) throws InvalidStateChangeException {
+        if(pedido.getDefeito() == null) {
+            throw new InvalidStateChangeException("Mudança de status de \'Em avaliação\' para \'Em manutenção\' é inválida"
+                    + " quando o defeito do pedido não está setado!");
+        }
         pedido.setStatus(new StatusManutencao());
     }
 

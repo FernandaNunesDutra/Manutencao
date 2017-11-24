@@ -32,6 +32,7 @@ ${resultado}
             <td><b>Método de Pagamento</b></td>
             <td><b>Aparelho</b></td>
             <td><b>Tipo Defeito</b></td>
+            <td><b>Id Funcionario</b></td>
             <td colspan="2"><b>Status</b></td>
         </tr>
         <c:forEach var="pedido" items="${bean.pedidos}">
@@ -41,6 +42,7 @@ ${resultado}
                 <td>${pedido.metodoPagamento.imprimir()}</td>
                 <td>${pedido.aparelho}</td>
                 <td>${pedido.defeito.getTipoDefeito().retornaTipoDefeito()}</td>
+                <td>${pedido.idFuncionario}</td>
                 <td>${pedido.status}</td>
                 
                 <td>
@@ -52,15 +54,19 @@ ${resultado}
                     <form  action="PedidoCadastrarDefeito.jsp" method="post">
                         <input type="hidden" name="pedidoId" id="pedidoId" value="${pedido.id}"/>
                         <input type="hidden" name="statusPedido" id="statusPedido" value="${pedido.status}"/>
-                        <c:if test = "${pedido.status.equals('Em avaliação')}">
+                        <c:if test = "${pedido.status.equals('Em avaliação') && pedido.defeito == null}">
                             <button type="submit">Cadastrar Defeito</button>
                         </c:if>
                     </form>
                     <form action="FrontController?action=PedidoAtribuirConserto" method="post">
                         <input type="hidden" name="pedidoId" id="pedidoId" value="${pedido.id}"/>
-                        <c:if test = "${pedido.status.equals('Em manutenção')}">
+                        <c:if test = "${pedido.status.equals('Em manutenção') && pedido.idFuncionario == 0}">
                             <button type="submit">Atribuir Conserto</button>
                         </c:if>    
+                    </form>
+                    <form action="FrontController?action=PedidoDesfazerStatus" method="post">
+                        <input type="hidden" name="pedidoId" id="pedidoId" value="${pedido.id}"/>
+                         <button type="submit">Desfazer Status</button>
                     </form>
                 </td>
             </tr>

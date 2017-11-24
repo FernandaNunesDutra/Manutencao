@@ -10,6 +10,7 @@ import model.cliente.ClienteFactory;
 import model.pedido.*;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -41,11 +42,22 @@ public class PedidoDAO {
             st = conn.createStatement();
             String dataStr = new SimpleDateFormat("yyyy-MM-dd").format(pedido.getDataRecebido());
 
-            String queryPedido = "INSERT INTO pedido (cliente, aparelho, dataRecebido, status, tipoPagamento) "
-                               + "VALUES ("+ clienteId +", '" + pedido.getAparelho() + "', '" + dataStr + "', " 
-                               + StatusFactory.RECEBIDO + ", " + tipoPagamento + ");";
+            String queryPedido = "INSERT INTO pedido (cliente, aparelho, dataRecebido, tipoPagamento) "
+                               + "VALUES ("+ clienteId +", '" + pedido.getAparelho() + "', '" + dataStr + "', " + tipoPagamento + ");";
+            
+            //Buscando ultimo id
+            int lastId = 0;
+            PreparedStatement ps = conn.prepareStatement(queryPedido, Statement.RETURN_GENERATED_KEYS);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                lastId = rs.getInt(1);
+            }
+            
+            queryPedido = "INSERT INTO hist_pedido_status (id_pedido, id_status) VALUES ('"+ lastId +"', '" + StatusFactory.RECEBIDO + "');";
 
             st.execute(queryPedido);
+           
             
         } finally {
             closeResources(conn, st);
@@ -67,17 +79,20 @@ public class PedidoDAO {
 
             ResultSet rs = st.executeQuery(query);
             if (rs.next()) {
-                StatusPedido statusPedido = StatusFactory.getStatusPedido(rs.getInt("status"));
+                StatusPedido statusPedido = StatusFactory.getStatusPedido(buscaUltimoStatus(rs.getInt("id")));
                 
                 Cliente cliente = ClienteFactory.getCliente(rs);
                 
                 MetodoPagamento metodoPagamento = MetodoPagamentoFactory.createMetodoPagamento(rs.getInt("tipoPagamento"));
                 
-                pedido = new Pedido(rs.getInt("id"), cliente, metodoPagamento, rs.getString("aparelho"),
-                        rs.getDate("dataRecebido"), statusPedido);
-                
+                pedido = new Pedido(rs.getInt("id"), rs.getInt("id_funcionario"), cliente, metodoPagamento, rs.getString("aparelho"),
+                         rs.getDate("dataRecebido"), statusPedido);
+                                
                 tipoDefeitoId = rs.getString("grau_defeito");
                 
+                //Memento
+                pedido = buscaHistoricoStatus(pedido);
+                             
                 if(tipoDefeitoId != null){
                     TipoDefeito tipoDefeito = TipoDefeitoFactory.getTipoDefeitoPedido(rs.getString("grau_defeito"));
                     Defeito defeito = new Defeito(tipoDefeito);
@@ -93,22 +108,32 @@ public class PedidoDAO {
     }
 
     public void alter(Pedido pedido) throws ClassNotFoundException, SQLException {
-        Connection conn = null;
+        insereHistoricoStatus(pedido.getId() , pedido.getIdStatus());
+    }
+    
+    public void alterDesfazStatus(Pedido pedido) throws ClassNotFoundException, SQLException {
+         Connection conn = null;
         Statement st = null;
 
         try {
             conn = DatabaseLocator.getInstance().getConnection();
             st = conn.createStatement();
+                      
+            String query = "SELECT * FROM hist_pedido_status WHERE id_pedido='"+pedido.getId()+"' ORDER BY id DESC LIMIT 1";
+            ResultSet rs = st.executeQuery(query);
+            if(rs.next()) {
+                query = "DELETE FROM hist_pedido_status WHERE id='"+rs.getInt("id")+"'";
+                st.executeUpdate(query);
+            }
 
-            String updatePedidoQuery = "UPDATE pedido SET status =" + pedido.getIdStatus() + " WHERE id = " + pedido.getId();
-            st.executeUpdate(updatePedidoQuery);
+            
         } finally {
             closeResources(conn, st);
         }
-
+                
     }
     
-     public void alterDefeito(Pedido pedido) throws ClassNotFoundException, SQLException {
+    public void alterDefeito(Pedido pedido) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Statement st = null;
 
@@ -124,7 +149,7 @@ public class PedidoDAO {
         }
     }
 
-     public void alterFuncionario(Pedido pedido) throws ClassNotFoundException, SQLException {
+    public void alterFuncionario(Pedido pedido) throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Statement st = null;
 
@@ -135,6 +160,7 @@ public class PedidoDAO {
             int idFuncionario = pedido.getIdFuncionario();
             String updatePedidoQuery = "UPDATE pedido SET  id_funcionario=" + idFuncionario + " WHERE id = " + pedido.getId();
             st.executeUpdate(updatePedidoQuery);
+            
         } finally {
             closeResources(conn, st);
         }
@@ -154,14 +180,12 @@ public class PedidoDAO {
 
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
-                StatusPedido statusPedido = StatusFactory.getStatusPedido(rs.getInt("status"));
+                StatusPedido statusPedido = StatusFactory.getStatusPedido(buscaUltimoStatus(rs.getInt("id")));
                 Cliente cliente = ClienteFactory.getCliente(rs);
                 MetodoPagamento metodoPagamento = MetodoPagamentoFactory.createMetodoPagamento(rs.getInt("tipoPagamento"));
                 
-                Pedido pedido = new Pedido(rs.getInt("id"), cliente, metodoPagamento, rs.getString("aparelho"),
+                Pedido pedido = new Pedido(rs.getInt("id"), rs.getInt("id_funcionario"), cliente, metodoPagamento, rs.getString("aparelho"),
                         rs.getDate("dataRecebido"), statusPedido);
-                
-                
                 
                 tipoDefeitoId = rs.getString("grau_defeito");
                 
@@ -171,13 +195,86 @@ public class PedidoDAO {
                     pedido.setDefeito(defeito);
                 }
                 
-                 pedidos.add(pedido);
+                pedidos.add(buscaHistoricoStatus(pedido));
             }
         } finally {
             closeResources(conn, st);
         }
 
         return pedidos;
+    }
+    
+    private void insereHistoricoStatus(int pedidoId , int statusId) throws ClassNotFoundException, SQLException{
+        Connection conn = null;
+        Statement st = null;
+
+        try {
+            conn = DatabaseLocator.getInstance().getConnection();
+            st = conn.createStatement();
+            
+            String queryStatus = "INSERT INTO hist_pedido_status (id_pedido, id_status) "
+                               + "VALUES ('"+ pedidoId +"', '" + statusId + "');";
+            
+            String query = "SELECT * FROM hist_pedido_status WHERE id_pedido='"+pedidoId+"' ORDER BY id DESC LIMIT 1";
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()) {
+                if(rs.getInt("id_status") != statusId){
+                   st.execute(queryStatus); 
+                }
+            }else{
+                st.execute(queryStatus);
+            }
+
+            
+        } finally {
+            closeResources(conn, st);
+        }
+    }
+    
+    private Pedido buscaHistoricoStatus(Pedido pedido) throws SQLException, ClassNotFoundException{
+        Connection conn = null;
+        Statement st = null;
+
+        try {
+            conn = DatabaseLocator.getInstance().getConnection();
+            st = conn.createStatement();
+                      
+            String query = "SELECT * FROM hist_pedido_status WHERE id_pedido='"+pedido.getId()+"' ORDER BY id ASC";
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next()) {
+                 pedido.setStatus(StatusFactory.getStatusPedido(rs.getInt("id_status")));
+                 pedido.getStatusSalvos().add(pedido.saveToMemento());
+            }
+
+            
+        } finally {
+            closeResources(conn, st);
+        }
+                
+        return pedido;
+    }
+    
+    private int buscaUltimoStatus(int pedidoId)throws ClassNotFoundException, SQLException{
+        Connection conn = null;
+        Statement st = null;
+        int id=0;
+
+        try {
+            conn = DatabaseLocator.getInstance().getConnection();
+            st = conn.createStatement();
+            
+            String query = "SELECT * FROM hist_pedido_status WHERE id_pedido='"+pedidoId+"' ORDER BY id DESC LIMIT 1";
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()) {
+                id = rs.getInt("id_status");
+            }
+
+            
+        } finally {
+            closeResources(conn, st);
+        }
+        
+        return id;
     }
     
     private void closeResources(Connection conn, Statement st) throws SQLException {

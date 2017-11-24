@@ -5,6 +5,7 @@
  */
 package model.pedido;
 
+import java.util.ArrayList;
 import model.InvalidStateChangeException;
 import model.cliente.Cliente;
 
@@ -21,6 +22,7 @@ public class Pedido extends Observable {
     private Date dataRecebido;
     private StatusPedido status;
     private Defeito defeito;
+    private ArrayList<PedidoMemento> statusSalvos = new ArrayList<>();
 
     public Pedido(Cliente cliente, String aparelho, MetodoPagamento metodoPagamento) {
         this.cliente = cliente;
@@ -31,9 +33,10 @@ public class Pedido extends Observable {
         addObserver(cliente);
     }
 
-    public Pedido(int id, Cliente cliente, MetodoPagamento metodoPagamento,
+    public Pedido(int id, int idFuncionario, Cliente cliente, MetodoPagamento metodoPagamento,
                   String aparelho, Date dataRecebido, StatusPedido status) {
         this.id = id;
+        this.idFuncionario = idFuncionario;
         this.cliente = cliente;
         this.metodoPagamento = metodoPagamento;
         this.aparelho = aparelho;
@@ -131,5 +134,21 @@ public class Pedido extends Observable {
     
     public void setIdFuncionario(int id){
         this.idFuncionario = id;
+    }
+
+    public ArrayList<PedidoMemento> getStatusSalvos() {
+        return statusSalvos;
+    }
+
+    public void setStatusSalvos(PedidoMemento status) {
+        statusSalvos.add(status);
+    }
+ 
+    public PedidoMemento saveToMemento(){
+        return new PedidoMemento(status);
+    }
+
+    public void restoreFromMemento(PedidoMemento memento){
+        status = memento.getStatusSalvo();    
     }
 }

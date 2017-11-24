@@ -36,5 +36,9 @@
         
     ${resultado}
 
+    <br> 
+    
+    <a href="PedidoMostrar.jsp">Mostrar Pedidos</a>
+    
 </body>
 </html>
